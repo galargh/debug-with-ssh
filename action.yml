@@ -1,0 +1,11 @@
+name: 'Debug with SSH'
+description: 'Open an SSH connection to the runner when debug mode is enabled'
+
+branding:
+  icon: 'award'
+  color: 'green'
+
+runs:
+  using: 'node16'
+  main: 'main.js'
+  post: 'post.js'
