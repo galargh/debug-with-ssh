@@ -18,7 +18,7 @@ async function install() {
     name = `cloudflared-linux-${arch === 'x64' ? 'amd64' : arch}`
   }
 
-  const url = `https://github.com/cloudflare/cloudflared/releases/${version === 'latest' ? 'latest/download' : `download/${version}`}/${name}.tar.gz`
+  const url = `https://github.com/cloudflare/cloudflared/releases/${version === 'latest' ? 'latest/download' : `download/${version}`}/${name}`
 
   core.info(`Downloading cloudflared(${version}) for ${platform}(${arch}) from ${url}`)
   let path = await tc.downloadTool(url)
