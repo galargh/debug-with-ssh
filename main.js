@@ -8,7 +8,7 @@ async function install() {
   const platform = os.platform()
   const arch = os.arch()
 
-  const name = `upterm_${platform === 'windows' ? 'linux' : platform}_${arch}`
+  const name = `upterm_${platform === 'win32' ? 'linux' : platform}_${arch === 'x64' ? 'amd64' : arch}`
   const url = `https://github.com/owenthereal/upterm/releases/${version === 'latest' ? 'latest/download' : `download/${version}`}/${name}.tar.gz`
 
   core.info(`Downloading upterm(${version}) for ${platform}(${arch}) from ${url}`)
