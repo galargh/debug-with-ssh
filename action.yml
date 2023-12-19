@@ -7,7 +7,7 @@ branding:
 
 inputs:
   version:
-    description: 'The version of upterm to use'
+    description: 'The version of cloudflared to use'
     required: false
     default: 'latest'
 

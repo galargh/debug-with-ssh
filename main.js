@@ -8,14 +8,25 @@ async function install() {
   const platform = os.platform()
   const arch = os.arch()
 
-  const name = `upterm_${platform === 'win32' ? 'linux' : platform}_${arch === 'x64' ? 'amd64' : arch}`
-  const url = `https://github.com/owenthereal/upterm/releases/${version === 'latest' ? 'latest/download' : `download/${version}`}/${name}.tar.gz`
+  // https://github.com/cloudflare/cloudflared/issues/389
+  let name
+  if (platform === 'darwin') {
+    name = 'cloudflared-darwin-amd64.tgz'
+  } else if (platform === 'wind32') {
+    name = `cloudflared-windows-${arch === 'x64' ? 'amd64' : arch}.exe`
+  } else {
+    name = `cloudflared-linux-${arch === 'x64' ? 'amd64' : arch}`
+  }
 
-  core.info(`Downloading upterm(${version}) for ${platform}(${arch}) from ${url}`)
-  const tar = await tc.downloadTool(url)
+  const url = `https://github.com/cloudflare/cloudflared/releases/${version === 'latest' ? 'latest/download' : `download/${version}`}/${name}.tar.gz`
 
-  core.info(`Extracting ${tar}`)
-  const path = await tc.extractTar(tar)
+  core.info(`Downloading cloudflared(${version}) for ${platform}(${arch}) from ${url}`)
+  let path = await tc.downloadTool(url)
+
+  if (name.endsWith('.tgz')) {
+    core.info(`Extracting ${path}`)
+    path = await tc.extractTar(path)
+  }
 
   core.info(`Adding ${path} to PATH`)
   core.addPath(path)
