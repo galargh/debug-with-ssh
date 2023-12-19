@@ -1,5 +1,6 @@
 const core = require('@actions/core')
 const tc = require('@actions/tool-cache')
+const os = require('os')
 
 async function install() {
   const version = core.getInput('version')
