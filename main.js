@@ -5,14 +5,19 @@ const os = require('os')
 async function install() {
   const version = core.getInput('version')
 
-  const arch = os.arch()
   const platform = os.platform()
+  const arch = os.arch()
 
   const name = `upterm_${platform === 'windows' ? 'linux' : platform}_${arch}`
-  const url = `https://github.com/owenthereal/upterm/releases/download/${version}/${name}.tar.gz`
+  const url = `https://github.com/owenthereal/upterm/releases/${version === 'latest' ? 'latest/download' : `download/${version}`}/${name}.tar.gz`
+
+  core.info(`Downloading upterm(${version}) for ${platform}(${arch}) from ${url}`)
   const tar = await tc.downloadTool(url)
+
+  core.info(`Extracting ${tar}`)
   const path = await tc.extractTar(tar)
 
+  core.info(`Adding ${path} to PATH`)
   core.addPath(path)
 }
 

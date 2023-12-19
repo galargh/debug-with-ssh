@@ -5,6 +5,12 @@ branding:
   icon: 'award'
   color: 'green'
 
+inputs:
+  version:
+    description: 'The version of upterm to use'
+    required: false
+    default: 'latest'
+
 runs:
   using: 'node16'
   main: 'main.js'
