@@ -67,7 +67,7 @@ async function downloadCloudflared(platform, arch, version) {
 
 async function installCloudflared(platform, arch, version) {
   let path = tc.find('cloudflared', version, arch)
-  if (path !== undefined) {
+  if (path !== '') {
     core.info(`Found cached cloudflared(${version}) for ${platform}(${arch}) at ${path}`)
   } else {
     core.info(`Downloading cloudflared(${version}) for ${platform}(${arch})`)
