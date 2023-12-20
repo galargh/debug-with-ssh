@@ -63,6 +63,8 @@ async function downloadCloudflared(platform, arch, version) {
     core.info(`Extracting ${path}`)
     path = await tc.extractTar(path)
   }
+
+  return path
 }
 
 async function installCloudflared(platform, arch, version) {
