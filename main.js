@@ -2,6 +2,7 @@ const core = require('@actions/core')
 const tc = require('@actions/tool-cache')
 
 const os = require('os')
+const path = require('path')
 
 function getPlatformAndArch() {
   let platform, arch
@@ -57,30 +58,31 @@ async function downloadCloudflared(platform, arch, version) {
   const url = `https://github.com/cloudflare/cloudflared/releases/${version === 'latest' ? 'latest/download' : `download/${version}`}/cloudflared-${platform}-${arch}${extension}`
 
   core.info(`Downloading cloudflared(${version}) for ${platform}(${arch}) from ${url}`)
-  let path = await tc.downloadTool(url)
+  let cloudflaredPath = await tc.downloadTool(url)
 
   if (extension === '.tgz') {
-    core.info(`Extracting ${path}`)
-    path = await tc.extractTar(path)
+    core.info(`Extracting ${cloudflaredPath}`)
+    cloudflaredPath = await tc.extractTar(cloudflaredPath)
+    cloudflaredPath = path.join(cloudflaredPath, 'cloudflared')
   }
 
-  return path
+  return cloudflaredPath
 }
 
 async function installCloudflared(platform, arch, version) {
-  let path = tc.find('cloudflared', version, arch)
-  if (path !== '') {
-    core.info(`Found cached cloudflared(${version}) for ${platform}(${arch}) at ${path}`)
+  let cloudflaredPath = tc.find('cloudflared', version, arch)
+  if (cloudflaredPath !== '') {
+    core.info(`Found cached cloudflared(${version}) for ${platform}(${arch}) at ${cloudflaredPath}`)
   } else {
     core.info(`Downloading cloudflared(${version}) for ${platform}(${arch})`)
-    path = await downloadCloudflared(platform, arch, version)
+    cloudflaredPath = await downloadCloudflared(platform, arch, version)
 
-    core.info(`Caching ${path}`)
-    path = await tc.cacheFile(path, 'cloudflared', 'cloudflared', version, arch)
+    core.info(`Caching ${cloudflaredPath}`)
+    cloudflaredPath = await tc.cacheFile(cloudflaredPath, 'cloudflared', 'cloudflared', version, arch)
   }
 
-  core.info(`Adding ${path} to PATH`)
-  core.addPath(path)
+  core.info(`Adding ${cloudflaredPath} to PATH`)
+  core.addPath(cloudflaredPath)
 }
 
 async function run() {
