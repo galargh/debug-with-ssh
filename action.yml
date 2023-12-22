@@ -6,8 +6,12 @@ branding:
   color: 'green'
 
 inputs:
-  version:
+  cloudflared:
     description: 'The version of cloudflared to use'
+    required: false
+    default: 'latest'
+  tmux:
+    description: 'The version of tmux to use'
     required: false
     default: 'latest'
 
