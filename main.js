@@ -75,14 +75,25 @@ async function installCloudflared(platform, arch, version) {
     core.info(`Found cached cloudflared(${version}) for ${platform}(${arch}) at ${cloudflaredPath}`)
   } else {
     core.info(`Downloading cloudflared(${version}) for ${platform}(${arch})`)
-    cloudflaredPath = await downloadCloudflared(platform, arch, version)
+    binPath = await downloadCloudflared(platform, arch, version)
 
-    core.info(`Caching ${cloudflaredPath}`)
-    cloudflaredPath = await tc.cacheFile(cloudflaredPath, 'cloudflared', 'cloudflared', version, arch)
+    extension = platform === 'windows' ? '.exe' : ''
+
+    core.info(`Caching ${binPath}`)
+    cachePath = await tc.cacheFile(binPath, `cloudflared${extension}`, 'cloudflared', version, arch)
+
+    cloudflaredPath = path.join(cachePath, `cloudflared${extension}`)
+
+    if (platform === 'linux') {
+      core.info(`Setting ${cloudflaredPath} to 755`)
+      fs.chmodSync(cloudflaredPath, '755')
+    }
   }
 
-  core.info(`Adding ${cloudflaredPath} to PATH`)
-  core.addPath(cloudflaredPath)
+  dirPath = path.dirname(cloudflaredPath)
+
+  core.info(`Adding ${dirPath} which contains ${cloudflaredPath} to PATH`)
+  core.addPath(dirPath)
 }
 
 async function run() {
