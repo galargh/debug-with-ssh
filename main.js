@@ -109,16 +109,16 @@ async function installTmux(platform, arch, version) {
         // Assuming Ubuntu
         await exec.exec('sudo apt update')
         await exec.exec('sudo apt remove -y tmux')
-        await exec.exec(`sudo apt install -y tmux=${version}`)
+        await exec.exec(`sudo apt install -y tmux${version === 'latest' ? '' : `=${version}`}`)
         binPath = await exec.getExecOutput('which tmux')
         break
       case 'darwin':
         await exec.exec('brew update')
-        await exec.exec(`brew install --force tmux@${version}`)
+        await exec.exec(`brew install --force tmux${version === 'latest' ? '' : `@${version}`}`)
         binPath = await exec.getExecOutput('which tmux')
         break
       case 'windows':
-        await exec.exec(`pacman -Sy --noconfirm tmux=${version}`, undefined, {shell: 'C:\\msys64\\usr\\bin\\bash.exe'})
+        await exec.exec(`pacman -Sy --noconfirm tmux${version === 'latest' ? '' : `=${version}`}`, undefined, {shell: 'C:\\msys64\\usr\\bin\\bash.exe'})
         binPath = await exec.getExecOutput('which tmux', undefined, {shell: 'C:\\msys64\\usr\\bin\\bash.exe'})
         break
       default:
