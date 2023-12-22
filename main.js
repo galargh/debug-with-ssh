@@ -120,7 +120,7 @@ async function installTmux(platform, arch, version) {
       case 'windows':
         // https://github.com/actions/toolkit/issues/229
         await exec.exec('C:\\msys64\\usr\\bin\\bash.exe', ['-lc', `pacman -Sy --noconfirm tmux${version === 'latest' ? '' : `=${version}`}`])
-        binPath = (await exec.getExecOutput('C:\\msys64\\usr\\bin\\bash.exe', ['which tmux'])).stdout.trim()
+        binPath = (await exec.getExecOutput('C:\\msys64\\usr\\bin\\bash.exe', ['-lc', 'which tmux'])).stdout.trim()
         break
       default:
         throw new Error(`Unsupported platform: ${platform}`)
