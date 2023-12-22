@@ -3,6 +3,7 @@ const tc = require('@actions/tool-cache')
 
 const os = require('os')
 const path = require('path')
+const fs = require('fs')
 
 function getPlatformAndArch() {
   let platform, arch
