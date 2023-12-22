@@ -110,16 +110,17 @@ async function installTmux(platform, arch, version) {
         await exec.exec('sudo apt update')
         await exec.exec('sudo apt remove -y tmux')
         await exec.exec(`sudo apt install -y tmux${version === 'latest' ? '' : `=${version}`}`)
-        binPath = await exec.getExecOutput('which tmux')
+        binPath = (await exec.getExecOutput('which tmux')).stdout.trim()
         break
       case 'darwin':
         await exec.exec('brew update')
         await exec.exec(`brew install --force tmux${version === 'latest' ? '' : `@${version}`}`)
-        binPath = await exec.getExecOutput('which tmux')
+        binPath = (await exec.getExecOutput('which tmux')).stdout.trim()
         break
       case 'windows':
-        await exec.exec(`pacman -Sy --noconfirm tmux${version === 'latest' ? '' : `=${version}`}`, undefined, {shell: 'C:\\msys64\\usr\\bin\\bash.exe'})
-        binPath = await exec.getExecOutput('which tmux', undefined, {shell: 'C:\\msys64\\usr\\bin\\bash.exe'})
+        // https://github.com/actions/toolkit/issues/229
+        await exec.exec('C:\\msys64\\usr\\bin\\bash.exe', ['-lc', `pacman -Sy --noconfirm tmux${version === 'latest' ? '' : `=${version}`}`])
+        binPath = (await exec.getExecOutput('C:\\msys64\\usr\\bin\\bash.exe', ['which tmux'])).stdout.trim()
         break
       default:
         throw new Error(`Unsupported platform: ${platform}`)
